@@ -53,3 +53,4 @@ try {
 } catch (err) {
     console.error('[postinstall] Error patching buffer-equal-constant-time:', err);
 }
+

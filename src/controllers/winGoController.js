@@ -556,7 +556,8 @@ const addWinGo = async (game) => {
         if (game == 5) join = 'wingo5';
         if (game == 10) join = 'wingo10';
 
-        const [winGoNow] = await connection.query(`SELECT period FROM wingo WHERE status = 0 AND game = "${join}" ORDER BY id DESC LIMIT 1 `);
+        const [winGoNow] = await connection.query(`SELECT period FROM wingo WHERE status = 0 AND game = '${join}' ORDER BY id DESC LIMIT 1 `);
+        if (!winGoNow || winGoNow.length === 0) return;
         const [setting] = await connection.query('SELECT * FROM `admin` ');
         let period = winGoNow[0].period; // cầu hiện tại
         let amount = Math.floor(Math.random() * 10);

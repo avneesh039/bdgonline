@@ -275,6 +275,7 @@ const addK3 = async (game) => {
         let result2 = makeid(3);
         let timeNow = Date.now();
         let [k5D] = await connection.query(`SELECT period FROM k3 WHERE status = 0 AND game = ${game} ORDER BY id DESC LIMIT 1 `);
+        if (!k5D || k5D.length === 0) return;
         const [setting] = await connection.query('SELECT * FROM `admin` ');
         let period = k5D[0].period;
 
@@ -286,7 +287,7 @@ const addK3 = async (game) => {
 
         let newArr = '';
         if (nextResult == '-1') {
-            await connection.execute(`UPDATE k3 SET result = ?,status = ? WHERE period = ? AND game = "${game}"`, [result2, 1, period]);
+            await connection.execute(`UPDATE k3 SET result = ?,status = ? WHERE period = ? AND game = '${game}'`, [result2, 1, period]);
             newArr = '-1';
         } else {
             let result = '';

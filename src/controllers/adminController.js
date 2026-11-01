@@ -92,7 +92,7 @@ const middlewareAdminController = async (req, res, next) => {
         return res.redirect("/login");
     }
     const [rows] = await connection.execute('SELECT `token`,`level`, `status` FROM `users` WHERE `token` = ? AND veri = 1', [auth]);
-    if (!rows) {
+    if (!rows || rows.length === 0) {
         return res.redirect("/login");
     }
     try {
@@ -155,7 +155,7 @@ const totalJoin = async (req, res) => {
 const listMember = async (req, res) => {
     let { pageno, limit } = req.body;
 
-    if (!pageno || !limit) {
+    if (pageno === undefined || limit === undefined || pageno === '' || limit === '') {
         return res.status(200).json({
             code: 0,
             msg: "No more data",
@@ -166,7 +166,10 @@ const listMember = async (req, res) => {
         });
     }
 
-    if (pageno < 0 || limit < 0) {
+    pageno = parseInt(pageno);
+    limit = parseInt(limit);
+
+    if (isNaN(pageno) || isNaN(limit) || pageno < 0 || limit <= 0) {
         return res.status(200).json({
             code: 0,
             msg: "No more data",
@@ -189,7 +192,7 @@ const listMember = async (req, res) => {
 const listCTV = async (req, res) => {
     let { pageno, pageto } = req.body;
 
-    if (!pageno || !pageto) {
+    if (pageno === undefined || pageto === undefined || pageno === '' || pageto === '') {
         return res.status(200).json({
             code: 0,
             msg: "No more data",
@@ -200,7 +203,10 @@ const listCTV = async (req, res) => {
         });
     }
 
-    if (pageno < 0 || pageto < 0) {
+    pageno = parseInt(pageno);
+    pageto = parseInt(pageto);
+
+    if (isNaN(pageno) || isNaN(pageto) || pageno < 0 || pageto <= 0) {
         return res.status(200).json({
             code: 0,
             msg: "No more data",
@@ -307,12 +313,12 @@ const statistical2 = async (req, res) => {
     const [recharge_today] = await connection.query(`SELECT SUM(money) as total FROM recharge WHERE status = 1 AND today = ?`, [timerJoin2()]);
     const [withdraw_today] = await connection.query(`SELECT SUM(money) as total FROM withdraw WHERE status = 1 AND today = ?`, [timerJoin2()]);
 
-    let win = wingo[0].total;
-    let loss = wingo2[0].total;
-    let usersOnline = users[0].total;
-    let usersOffline = users2[0].total;
-    let recharges = recharge[0].total;
-    let withdraws = withdraw[0].total;
+    let win = wingo[0]?.total || 0;
+    let loss = wingo2[0]?.total || 0;
+    let usersOnline = users[0]?.total || 0;
+    let usersOffline = users2[0]?.total || 0;
+    let recharges = recharge[0]?.total || 0;
+    let withdraws = withdraw[0]?.total || 0;
     return res.status(200).json({
         message: 'Success',
         status: true,
@@ -322,8 +328,8 @@ const statistical2 = async (req, res) => {
         usersOffline: usersOffline,
         recharges: recharges,
         withdraws: withdraws,
-        rechargeToday: recharge_today[0].total,
-        withdrawToday: withdraw_today[0].total,
+        rechargeToday: recharge_today[0]?.total || 0,
+        withdrawToday: withdraw_today[0]?.total || 0,
     });
 }
 
@@ -1526,7 +1532,7 @@ const listRechargeMem = async (req, res) => {
     let phone = req.params.phone;
     let { pageno, limit } = req.body;
 
-    if (!pageno || !limit) {
+    if (pageno === undefined || limit === undefined || pageno === '' || limit === '') {
         return res.status(200).json({
             code: 0,
             msg: "No more data",
@@ -1537,7 +1543,10 @@ const listRechargeMem = async (req, res) => {
         });
     }
 
-    if (pageno < 0 || limit < 0) {
+    pageno = parseInt(pageno);
+    limit = parseInt(limit);
+
+    if (isNaN(pageno) || isNaN(limit) || pageno < 0 || limit <= 0) {
         return res.status(200).json({
             code: 0,
             msg: "No more data",
@@ -1583,7 +1592,7 @@ const listWithdrawMem = async (req, res) => {
     let phone = req.params.phone;
     let { pageno, limit } = req.body;
 
-    if (!pageno || !limit) {
+    if (pageno === undefined || limit === undefined || pageno === '' || limit === '') {
         return res.status(200).json({
             code: 0,
             msg: "No more data",
@@ -1594,7 +1603,10 @@ const listWithdrawMem = async (req, res) => {
         });
     }
 
-    if (pageno < 0 || limit < 0) {
+    pageno = parseInt(pageno);
+    limit = parseInt(limit);
+
+    if (isNaN(pageno) || isNaN(limit) || pageno < 0 || limit <= 0) {
         return res.status(200).json({
             code: 0,
             msg: "No more data",
@@ -1640,7 +1652,7 @@ const listRedenvelope = async (req, res) => {
     let phone = req.params.phone;
     let { pageno, limit } = req.body;
 
-    if (!pageno || !limit) {
+    if (pageno === undefined || limit === undefined || pageno === '' || limit === '') {
         return res.status(200).json({
             code: 0,
             msg: "No more data",
@@ -1651,7 +1663,10 @@ const listRedenvelope = async (req, res) => {
         });
     }
 
-    if (pageno < 0 || limit < 0) {
+    pageno = parseInt(pageno);
+    limit = parseInt(limit);
+
+    if (isNaN(pageno) || isNaN(limit) || pageno < 0 || limit <= 0) {
         return res.status(200).json({
             code: 0,
             msg: "No more data",
@@ -1749,7 +1764,7 @@ const listBet = async (req, res) => {
     let phone = req.params.phone;
     let { pageno, limit } = req.body;
 
-    if (!pageno || !limit) {
+    if (pageno === undefined || limit === undefined || pageno === '' || limit === '') {
         return res.status(200).json({
             code: 0,
             msg: "No more data",
@@ -1760,7 +1775,10 @@ const listBet = async (req, res) => {
         });
     }
 
-    if (pageno < 0 || limit < 0) {
+    pageno = parseInt(pageno);
+    limit = parseInt(limit);
+
+    if (isNaN(pageno) || isNaN(limit) || pageno < 0 || limit <= 0) {
         return res.status(200).json({
             code: 0,
             msg: "No more data",

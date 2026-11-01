@@ -95,7 +95,11 @@ CREATE TABLE `admin` (
   `cskh` VARCHAR(255) DEFAULT '',
   `app` VARCHAR(255) DEFAULT '',
   `recharge_bonus` INT NOT NULL DEFAULT 0,
-  `recharge_bonus_2` INT NOT NULL DEFAULT 0
+  `recharge_bonus_2` INT NOT NULL DEFAULT 0,
+  `bs1` VARCHAR(255) DEFAULT '-1',
+  `bs3` VARCHAR(255) DEFAULT '-1',
+  `bs5` VARCHAR(255) DEFAULT '-1',
+  `bs10` VARCHAR(255) DEFAULT '-1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- -------------------------------------------------------------
