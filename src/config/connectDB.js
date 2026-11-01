@@ -2,14 +2,19 @@ import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
 dotenv.config();
 
+const port = process.env.DATABASE_PORT ? parseInt(process.env.DATABASE_PORT) : 3306;
+const isSSL = process.env.DATABASE_SSL === 'true' || port !== 3306;
+
 const connection = mysql.createPool({
     host: process.env.DATABASE_HOST || 'localhost',
+    port: port,
     user: process.env.DATABASE_USER || '99bigdaddy',
     password: process.env.DATABASE_PASSWORD !== undefined ? process.env.DATABASE_PASSWORD : '99bigdaddy',
     database: process.env.DATABASE_NAME || '99bigdaddy',
     waitForConnections: true,
     connectionLimit: 10,
-    queueLimit: 0
+    queueLimit: 0,
+    ssl: isSSL ? { rejectUnauthorized: false } : undefined
 });
 
 async function testConnection() {

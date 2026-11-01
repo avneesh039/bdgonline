@@ -11,30 +11,23 @@ function md5(str) {
 const timeNow = Date.now();
 
 const host = process.env.DATABASE_HOST || 'localhost';
+const port = process.env.DATABASE_PORT ? parseInt(process.env.DATABASE_PORT) : 3306;
 const user = process.env.DATABASE_USER || '99bigdaddy';
 const password = process.env.DATABASE_PASSWORD !== undefined ? process.env.DATABASE_PASSWORD : '99bigdaddy';
 const database = process.env.DATABASE_NAME || '99bigdaddy';
+const isSSL = process.env.DATABASE_SSL === 'true' || port !== 3306;
 
 async function initDatabase() {
-    console.log(`Connecting to MySQL host: ${host}...`);
+    console.log(`Connecting to MySQL host: ${host}:${port}...`);
     
-    // First connect without specifying database to ensure DB exists
-    const rootConn = await mysql.createConnection({
-        host,
-        user,
-        password
-    });
-
-    await rootConn.query(`CREATE DATABASE IF NOT EXISTS \`${database}\` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`);
-    console.log(`Database '${database}' is ready.`);
-    await rootConn.end();
-
     // Connect to the specific database
     const conn = await mysql.createConnection({
         host,
+        port,
         user,
         password,
-        database
+        database,
+        ssl: isSSL ? { rejectUnauthorized: false } : undefined
     });
 
     console.log(`Connected to database '${database}'. Initializing schema...`);
