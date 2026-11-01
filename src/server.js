@@ -1,22 +1,33 @@
-import app from './app.js';
+import buffer from 'node:buffer';
+import { Buffer } from 'node:buffer';
+import { createRequire } from 'node:module';
+
+const require = createRequire(import.meta.url);
+const bufMod = require('buffer');
+
+class SlowBufferShim extends Buffer {}
+if (!buffer.SlowBuffer) buffer.SlowBuffer = SlowBufferShim;
+if (!Buffer.SlowBuffer) Buffer.SlowBuffer = SlowBufferShim;
+if (!bufMod.SlowBuffer) bufMod.SlowBuffer = SlowBufferShim;
+
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import cronJobContronler from './controllers/cronJobContronler.js';
 import socketIoController from './controllers/socketIoController.js';
+
+const { default: app } = await import('./app.js');
 
 const server = createServer(app);
 const io = new Server(server);
 
 const port = process.env.PORT || 3015;
 
-// Cron game periodic jobs
-cronJobContronler.cronJobGame1p(io);
-
-// WebSocket event handlers
+// Init socket.io
 socketIoController.sendMessageAdmin(io);
 
-server.listen(port, () => {
-    console.log("Connected success port: " + port);
-});
+// Init cron jobs
+cronJobContronler.cronJobContronler(io);
 
-export default app;
+server.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});

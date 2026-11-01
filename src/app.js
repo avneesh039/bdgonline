@@ -20,4 +20,10 @@ app.get('/', (req, res) => {
     res.redirect('/home');
 });
 
+// Global error handler
+app.use((err, req, res, next) => {
+    console.error('Unhandled server error:', err);
+    res.status(500).send(`Server Error: ${err.message}`);
+});
+
 export default app;

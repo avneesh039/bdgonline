@@ -10,6 +10,8 @@ yarn-error.log*
 .env.development.local
 .env.test.local
 .env.production.local
+.env*
+!.env.example
 
 # Editor & OS files
 .DS_Store
@@ -22,3 +24,6 @@ Thumbs.db
 # Archives
 *.zip
 *.tar.gz
+
+# Vercel
+.vercel
