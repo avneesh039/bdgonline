@@ -26,7 +26,7 @@ const port = process.env.PORT || 3015;
 socketIoController.sendMessageAdmin(io);
 
 // Init cron jobs
-cronJobContronler.cronJobContronler(io);
+cronJobContronler.cronJobGame1p(io);
 
 server.listen(port, () => {
     console.log(`Server is running on port ${port}`);

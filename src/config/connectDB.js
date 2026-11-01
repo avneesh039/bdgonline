@@ -1,6 +1,11 @@
 import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
+import dns from 'dns';
 dotenv.config();
+
+try {
+    dns.setServers(['8.8.8.8', '1.1.1.1']);
+} catch (e) {}
 
 const port = process.env.DATABASE_PORT ? parseInt(process.env.DATABASE_PORT) : 3306;
 const isSSL = process.env.DATABASE_SSL === 'true' || port !== 3306;
@@ -15,6 +20,11 @@ const connection = mysql.createPool({
     connectionLimit: 10,
     queueLimit: 0,
     ssl: isSSL ? { rejectUnauthorized: false } : undefined
+});
+
+// Configure session sql_mode to avoid ANSI_QUOTES conflicts with double-quoted queries
+connection.on('connection', (conn) => {
+    conn.query("SET SESSION sql_mode = 'NO_ENGINE_SUBSTITUTION'");
 });
 
 async function testConnection() {
